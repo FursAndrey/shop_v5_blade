@@ -42,9 +42,7 @@ class CategoryController extends Controller
     {
         $response = Http::post(
             'http://shopv5/api/categories', 
-            [
-                'name' => $request->name,
-            ]
+            $request->validated()
         );
         if ($response->status() == 201) {
             return redirect()->route('category.index')->with('success', 'flushes.category_added '.json_decode($response->body())->name);
@@ -92,9 +90,7 @@ class CategoryController extends Controller
     {
         $response = Http::put(
             'http://shopv5/api/categories/'.$id, 
-            [
-                'name' => $request->name,
-            ]
+            $request->validated()
         );
         if ($response->status() == 200) {
             return redirect()->route('category.index')->with('success', 'flushes.category_updated '.$id);
