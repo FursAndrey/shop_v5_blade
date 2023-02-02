@@ -40,7 +40,17 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        dd('store');
+        $response = Http::post(
+            'http://shopv5/api/categories', 
+            [
+                'name' => $request->name,
+            ]
+        );
+        if ($response->status() == 201) {
+            return redirect()->route('category.index')->with('success', 'flushes.category_added '.json_decode($response->body())->name);
+        } else {
+            return redirect()->route('category.index')->with('danger', 'Error. Status '.$response->status());
+        }
     }
 
     /**
@@ -51,9 +61,9 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $resp = Http::acceptJson()->get('http://shopv5/api/categories/'.$id);
-        $category = json_decode($resp->body());
-        // dd($category);
+        $response = Http::acceptJson()->get('http://shopv5/api/categories/'.$id);
+        $category = json_decode($response->body());
+        
         return view('category.show', compact('category'));
     }
 
@@ -80,7 +90,17 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd('update');
+        $response = Http::put(
+            'http://shopv5/api/categories/'.$id, 
+            [
+                'name' => $request->name,
+            ]
+        );
+        if ($response->status() == 200) {
+            return redirect()->route('category.index')->with('success', 'flushes.category_updated '.$id);
+        } else {
+            return redirect()->route('category.index')->with('danger', 'Error. Status '.$response->status());
+        }
     }
 
     /**
@@ -95,6 +115,6 @@ class CategoryController extends Controller
         if ($response->status() == 409) {
             return redirect()->route('category.index')->with('danger', $response->body());
         }
-        return redirect()->route('category.index')->with('danger', __('flushes.category_deleted', ['category' => $id]));
+        return redirect()->route('category.index')->with('danger', 'flushes.category_deleted '.$id);
     }
 }
