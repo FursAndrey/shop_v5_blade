@@ -13,12 +13,17 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($page = null)
     {
-        $resp = Http::acceptJson()->get('http://shopv5/api/categories');
+        if (is_null($page)) {
+            $url = 'http://shopv5/api/categories';
+        } else {
+            $url = 'http://shopv5/api/categories?page='.$page;
+        }
+        
+        $resp = Http::acceptJson()->get($url);
         $categories = json_decode($resp->body());
-        // dd($categories);
-//ДОДЕЛАТЬ ПАГИНАЦИЮ
+        
         return view('category.index', compact('categories'));
     }
 

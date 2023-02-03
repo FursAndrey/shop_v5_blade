@@ -50,5 +50,11 @@
             </tr>
         @endforeach
     </table>
-    {{-- {{ $categories->links() }} --}}
+    @foreach ($categories->meta->links as $link)
+        @if (!is_null($link->url))
+            <a href="{{ route('categoryPage', substr($link->url, -1)) }}" style="border:1px solid silver; padding:4px; margin: 4px; border-radius:5px">
+                {!! $link->label !!}
+            </a>
+        @endif
+    @endforeach
 @endsection

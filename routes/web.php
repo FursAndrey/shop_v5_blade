@@ -19,3 +19,4 @@ Route::get('/', function () {
 });
 
 Route::resource('/category', CategoryController::class);
+Route::get('/category/page/{page}', [CategoryController::class, 'index'])->name('categoryPage');
