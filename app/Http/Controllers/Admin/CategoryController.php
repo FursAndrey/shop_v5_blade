@@ -62,7 +62,7 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         $response = Http::acceptJson()->get('http://shopv5/api/categories/'.$id);
         $category = json_decode($response->body());
@@ -76,7 +76,7 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
         $resp = Http::acceptJson()->get('http://shopv5/api/categories/'.$id);
         $category = json_decode($resp->body());
@@ -91,7 +91,7 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CategoryRequest $request, $id)
+    public function update(CategoryRequest $request, int $id)
     {
         $response = Http::put(
             'http://shopv5/api/categories/'.$id, 
@@ -110,7 +110,7 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $response = Http::delete('http://shopv5/api/categories/'.$id);
         if ($response->status() == 409) {
