@@ -17,6 +17,7 @@
     <body class="m-3">
         <div>
             <a href="{{ route('category.index') }}">@lang('btn.categories')</a>
+            <a href="{{ route('currency.index') }}">@lang('btn.currencies')</a>
         </div>
         @yield('content')
 		<!-- all js here -->

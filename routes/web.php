@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CurrencyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +21,5 @@ Route::get('/', function () {
 
 Route::resource('/category', CategoryController::class);
 Route::get('/category/page/{page}', [CategoryController::class, 'index'])->name('categoryPage');
+Route::resource('/currency', CurrencyController::class);
+Route::get('/currency/page/{page}', [CurrencyController::class, 'index'])->name('currencyPage');
