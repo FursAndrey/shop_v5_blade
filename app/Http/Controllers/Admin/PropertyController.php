@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\PropertyRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
-class CategoryController extends Controller
+class PropertyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,15 +17,15 @@ class CategoryController extends Controller
     public function index($page = null)
     {
         if (is_null($page)) {
-            $url = 'http://shopv5/api/categories';
+            $url = 'http://shopv5/api/properties';
         } else {
-            $url = 'http://shopv5/api/categories?page='.$page;
+            $url = 'http://shopv5/api/properties?page='.$page;
         }
         
         $resp = Http::acceptJson()->get($url);
-        $categories = json_decode($resp->body());
+        $properties = json_decode($resp->body());
         
-        return view('category.index', compact('categories'));
+        return view('property.index', compact('properties'));
     }
 
     /**
@@ -34,7 +35,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('category.form');
+        return view('property.form');
     }
 
     /**
@@ -43,16 +44,16 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CategoryRequest $request)
+    public function store(PropertyRequest $request)
     {
         $response = Http::post(
-            'http://shopv5/api/categories', 
+            'http://shopv5/api/properties', 
             $request->validated()
         );
         if ($response->status() == 201) {
-            return redirect()->route('category.index')->with('success', 'flushes.category_added '.json_decode($response->body())->name);
+            return redirect()->route('property.index')->with('success', 'flushes.property_added '.json_decode($response->body())->name);
         } else {
-            return redirect()->route('category.index')->with('danger', 'Error. Status '.$response->status());
+            return redirect()->route('property.index')->with('danger', 'Error. Status '.$response->status());
         }
     }
 
@@ -64,10 +65,10 @@ class CategoryController extends Controller
      */
     public function show(int $id)
     {
-        $response = Http::acceptJson()->get('http://shopv5/api/categories/'.$id);
-        $category = json_decode($response->body());
+        $response = Http::acceptJson()->get('http://shopv5/api/properties/'.$id);
+        $property = json_decode($response->body());
         
-        return view('category.show', compact('category'));
+        return view('property.show', compact('property'));
     }
 
     /**
@@ -78,10 +79,10 @@ class CategoryController extends Controller
      */
     public function edit(int $id)
     {
-        $resp = Http::acceptJson()->get('http://shopv5/api/categories/'.$id);
-        $category = json_decode($resp->body());
+        $resp = Http::acceptJson()->get('http://shopv5/api/properties/'.$id);
+        $property = json_decode($resp->body());
 
-        return view('category.form', compact('category'));
+        return view('property.form', compact('property'));
     }
 
     /**
@@ -91,16 +92,16 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CategoryRequest $request, int $id)
+    public function update(PropertyRequest $request, int $id)
     {
         $response = Http::put(
-            'http://shopv5/api/categories/'.$id, 
+            'http://shopv5/api/properties/'.$id, 
             $request->validated()
         );
         if ($response->status() == 200) {
-            return redirect()->route('category.index')->with('success', 'flushes.category_updated '.$id);
+            return redirect()->route('property.index')->with('success', 'flushes.property_updated '.$id);
         } else {
-            return redirect()->route('category.index')->with('danger', 'Error. Status '.$response->status());
+            return redirect()->route('property.index')->with('danger', 'Error. Status '.$response->status());
         }
     }
 
@@ -112,10 +113,10 @@ class CategoryController extends Controller
      */
     public function destroy(int $id)
     {
-        $response = Http::delete('http://shopv5/api/categories/'.$id);
+        $response = Http::delete('http://shopv5/api/properties/'.$id);
         if ($response->status() == 409) {
-            return redirect()->route('category.index')->with('danger', $response->body());
+            return redirect()->route('property.index')->with('danger', $response->body());
         }
-        return redirect()->route('category.index')->with('danger', 'flushes.category_deleted '.$id);
+        return redirect()->route('property.index')->with('danger', 'flushes.property_deleted '.$id);
     }
 }

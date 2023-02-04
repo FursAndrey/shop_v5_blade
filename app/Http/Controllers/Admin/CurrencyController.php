@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\CurrencyRequest;
 use Illuminate\Support\Facades\Http;
 
-class CategoryController extends Controller
+class CurrencyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,15 +16,15 @@ class CategoryController extends Controller
     public function index($page = null)
     {
         if (is_null($page)) {
-            $url = 'http://shopv5/api/categories';
+            $url = 'http://shopv5/api/currencies';
         } else {
-            $url = 'http://shopv5/api/categories?page='.$page;
+            $url = 'http://shopv5/api/currencies?page='.$page;
         }
         
         $resp = Http::acceptJson()->get($url);
-        $categories = json_decode($resp->body());
+        $currencies = json_decode($resp->body());
         
-        return view('category.index', compact('categories'));
+        return view('currency.index', compact('currencies'));
     }
 
     /**
@@ -34,7 +34,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('category.form');
+        return view('currency.form');
     }
 
     /**
@@ -43,16 +43,16 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CategoryRequest $request)
+    public function store(CurrencyRequest $request)
     {
         $response = Http::post(
-            'http://shopv5/api/categories', 
+            'http://shopv5/api/currencies', 
             $request->validated()
         );
         if ($response->status() == 201) {
-            return redirect()->route('category.index')->with('success', 'flushes.category_added '.json_decode($response->body())->name);
+            return redirect()->route('currency.index')->with('success', 'flushes.currency_added '.json_decode($response->body())->code);
         } else {
-            return redirect()->route('category.index')->with('danger', 'Error. Status '.$response->status());
+            return redirect()->route('currency.index')->with('danger', 'Error. Status '.$response->status());
         }
     }
 
@@ -64,10 +64,10 @@ class CategoryController extends Controller
      */
     public function show(int $id)
     {
-        $response = Http::acceptJson()->get('http://shopv5/api/categories/'.$id);
-        $category = json_decode($response->body());
+        $response = Http::acceptJson()->get('http://shopv5/api/currencies/'.$id);
+        $currency = json_decode($response->body());
         
-        return view('category.show', compact('category'));
+        return view('currency.show', compact('currency'));
     }
 
     /**
@@ -78,10 +78,10 @@ class CategoryController extends Controller
      */
     public function edit(int $id)
     {
-        $resp = Http::acceptJson()->get('http://shopv5/api/categories/'.$id);
-        $category = json_decode($resp->body());
+        $resp = Http::acceptJson()->get('http://shopv5/api/currencies/'.$id);
+        $currency = json_decode($resp->body());
 
-        return view('category.form', compact('category'));
+        return view('currency.form', compact('currency'));
     }
 
     /**
@@ -91,16 +91,16 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CategoryRequest $request, int $id)
+    public function update(CurrencyRequest $request, int $id)
     {
         $response = Http::put(
-            'http://shopv5/api/categories/'.$id, 
+            'http://shopv5/api/currencies/'.$id, 
             $request->validated()
         );
         if ($response->status() == 200) {
-            return redirect()->route('category.index')->with('success', 'flushes.category_updated '.$id);
+            return redirect()->route('currency.index')->with('success', 'flushes.currency_updated '.json_decode($response->body())->code);
         } else {
-            return redirect()->route('category.index')->with('danger', 'Error. Status '.$response->status());
+            return redirect()->route('currency.index')->with('danger', 'Error. Status '.$response->status());
         }
     }
 
@@ -112,10 +112,10 @@ class CategoryController extends Controller
      */
     public function destroy(int $id)
     {
-        $response = Http::delete('http://shopv5/api/categories/'.$id);
+        $response = Http::delete('http://shopv5/api/currencies/'.$id);
         if ($response->status() == 409) {
-            return redirect()->route('category.index')->with('danger', $response->body());
+            return redirect()->route('currency.index')->with('danger', $response->body());
         }
-        return redirect()->route('category.index')->with('danger', 'flushes.category_deleted '.$id);
+        return redirect()->route('currency.index')->with('danger', 'flushes.currency_deleted '.$id);
     }
 }
