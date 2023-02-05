@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CurrencyController;
+use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\PropertyController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,3 +27,5 @@ Route::resource('/currency', CurrencyController::class);
 Route::get('/currency/page/{page}', [CurrencyController::class, 'index'])->name('currencyPage');
 Route::resource('/property', PropertyController::class);
 Route::get('/property/page/{page}', [PropertyController::class, 'index'])->name('propertyPage');
+Route::resource('/option', OptionController::class);
+Route::get('/option/page/{page}', [OptionController::class, 'index'])->name('optionPage');
