@@ -16,7 +16,7 @@ class OptionController extends Controller
      */
     public function index(int $page = null, MyApi $api)
     {
-        $response = $api->getWithRelations('options', $page);
+        $response = $api->getCollection('options', $page);
 
         $options = $response['body'];
         
@@ -30,7 +30,7 @@ class OptionController extends Controller
      */
     public function create(MyApi $api)
     {
-        $properties = $api->getWithRelations('property/all')['body'];
+        $properties = $api->getCollection('property/all')['body'];
         return view('option.form', compact('properties'));
     }
 
@@ -59,7 +59,7 @@ class OptionController extends Controller
      */
     public function show(int $id, MyApi $api)
     {
-        $response = $api->showItem('options', $id);
+        $response = $api->getItem('options', $id);
         $option = $response['body'];
         
         return view('option.show', compact('option'));
@@ -73,9 +73,9 @@ class OptionController extends Controller
      */
     public function edit(int $id, MyApi $api)
     {
-        $properties = $api->getWithRelations('property/all')['body'];
+        $properties = $api->getCollection('property/all')['body'];
         
-        $response = $api->showItem('options', $id);
+        $response = $api->getItem('options', $id);
         $option = $response['body'];
         
         return view('option.form', compact('option', 'properties'));

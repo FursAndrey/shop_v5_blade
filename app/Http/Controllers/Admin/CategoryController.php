@@ -15,7 +15,7 @@ class CategoryController extends Controller
      */
     public function index($page = null, MyApi $api)
     {
-        $response = $api->getWithRelations('categories', $page);
+        $response = $api->getCollection('categories', $page);
 
         $categories = $response['body'];
         
@@ -57,7 +57,7 @@ class CategoryController extends Controller
      */
     public function show(int $id, MyApi $api)
     {
-        $response = $api->showItem('categories', $id);
+        $response = $api->getItem('categories', $id);
         $category = $response['body'];
         
         return view('category.show', compact('category'));
@@ -71,7 +71,7 @@ class CategoryController extends Controller
      */
     public function edit(int $id, MyApi $api)
     {
-        $response = $api->showItem('categories', $id);
+        $response = $api->getItem('categories', $id);
         $category = $response['body'];
 
         return view('category.form', compact('category'));

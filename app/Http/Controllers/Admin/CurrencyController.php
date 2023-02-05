@@ -15,7 +15,7 @@ class CurrencyController extends Controller
      */
     public function index($page = null, MyApi $api)
     {
-        $response = $api->getWithRelations('currencies', $page);
+        $response = $api->getCollection('currencies', $page);
 
         $currencies = $response['body'];
         
@@ -57,7 +57,7 @@ class CurrencyController extends Controller
      */
     public function show(int $id, MyApi $api)
     {
-        $response = $api->showItem('currencies', $id);
+        $response = $api->getItem('currencies', $id);
         $currency = $response['body'];
         
         return view('currency.show', compact('currency'));
@@ -71,7 +71,7 @@ class CurrencyController extends Controller
      */
     public function edit(int $id, MyApi $api)
     {
-        $response = $api->showItem('currencies', $id);
+        $response = $api->getItem('currencies', $id);
         $currency = $response['body'];
 
         return view('currency.form', compact('currency'));

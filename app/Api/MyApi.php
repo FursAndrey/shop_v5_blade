@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Http;
 
 class MyApi
 {
-    public function getWithRelations(string $apiName, $page = null): array
+    public function getCollection(string $apiName, $page = null): array
     {
         if (is_null($page)) {
             $url = env('MY_API_URL').$apiName;
@@ -58,7 +58,7 @@ class MyApi
         ];
     }
 
-    public function showItem(string $apiName, int $elementId): array
+    public function getItem(string $apiName, int $elementId): array
     {
         $response = Http::acceptJson()->get(env('MY_API_URL').$apiName.'/'.$elementId);
         

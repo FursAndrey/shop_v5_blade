@@ -15,7 +15,7 @@ class PropertyController extends Controller
      */
     public function index($page = null, MyApi $api)
     {
-        $response = $api->getWithRelations('properties', $page);
+        $response = $api->getCollection('properties', $page);
 
         $properties = $response['body'];
 
@@ -57,7 +57,7 @@ class PropertyController extends Controller
      */
     public function show(int $id, MyApi $api)
     {
-        $response = $api->showItem('properties', $id);
+        $response = $api->getItem('properties', $id);
         $property = $response['body'];
         
         return view('property.show', compact('property'));
@@ -71,7 +71,7 @@ class PropertyController extends Controller
      */
     public function edit(int $id, MyApi $api)
     {
-        $response = $api->showItem('properties', $id);
+        $response = $api->getItem('properties', $id);
         $property = $response['body'];
 
         return view('property.form', compact('property'));
