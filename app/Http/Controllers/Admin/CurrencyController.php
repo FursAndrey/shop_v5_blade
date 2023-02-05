@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Api\MyApi;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CurrencyRequest;
-use Illuminate\Support\Facades\Http;
 
 class CurrencyController extends Controller
 {
@@ -13,16 +13,11 @@ class CurrencyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($page = null)
+    public function index($page = null, MyApi $api)
     {
-        if (is_null($page)) {
-            $url = 'http://shopv5/api/currencies';
-        } else {
-            $url = 'http://shopv5/api/currencies?page='.$page;
-        }
-        
-        $resp = Http::acceptJson()->get($url);
-        $currencies = json_decode($resp->body());
+        $response = $api->getWithRelations('currencies', $page);
+
+        $currencies = $response['body'];
         
         return view('currency.index', compact('currencies'));
     }
@@ -43,16 +38,14 @@ class CurrencyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CurrencyRequest $request)
+    public function store(CurrencyRequest $request, MyApi $api)
     {
-        $response = Http::post(
-            'http://shopv5/api/currencies', 
-            $request->validated()
-        );
-        if ($response->status() == 201) {
-            return redirect()->route('currency.index')->with('success', 'flushes.currency_added '.json_decode($response->body())->code);
+        $response = $api->sendPost('currencies', $request->validated());
+
+        if ($response['status'] == 201) {
+            return redirect()->route('currency.index')->with('success', 'flushes.currency_added '.$response['body']->code);
         } else {
-            return redirect()->route('currency.index')->with('danger', 'Error. Status '.$response->status());
+            return redirect()->route('currency.index')->with('danger', 'Error. Status '.$response['status']);
         }
     }
 
@@ -62,10 +55,10 @@ class CurrencyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(int $id)
+    public function show(int $id, MyApi $api)
     {
-        $response = Http::acceptJson()->get('http://shopv5/api/currencies/'.$id);
-        $currency = json_decode($response->body());
+        $response = $api->showItem('currencies', $id);
+        $currency = $response['body'];
         
         return view('currency.show', compact('currency'));
     }
@@ -76,10 +69,10 @@ class CurrencyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(int $id)
+    public function edit(int $id, MyApi $api)
     {
-        $resp = Http::acceptJson()->get('http://shopv5/api/currencies/'.$id);
-        $currency = json_decode($resp->body());
+        $response = $api->showItem('currencies', $id);
+        $currency = $response['body'];
 
         return view('currency.form', compact('currency'));
     }
@@ -91,16 +84,14 @@ class CurrencyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CurrencyRequest $request, int $id)
+    public function update(CurrencyRequest $request, int $id, MyApi $api)
     {
-        $response = Http::put(
-            'http://shopv5/api/currencies/'.$id, 
-            $request->validated()
-        );
-        if ($response->status() == 200) {
-            return redirect()->route('currency.index')->with('success', 'flushes.currency_updated '.json_decode($response->body())->code);
+        $response = $api->sendPut('currencies', $id, $request->validated());
+        
+        if ($response['status'] == 200) {
+            return redirect()->route('currency.index')->with('success', 'flushes.currency_updated '.$response['body']->code);
         } else {
-            return redirect()->route('currency.index')->with('danger', 'Error. Status '.$response->status());
+            return redirect()->route('currency.index')->with('danger', 'Error. Status '.$response['status']);
         }
     }
 
@@ -110,11 +101,12 @@ class CurrencyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(int $id)
+    public function destroy(int $id, MyApi $api)
     {
-        $response = Http::delete('http://shopv5/api/currencies/'.$id);
-        if ($response->status() == 409) {
-            return redirect()->route('currency.index')->with('danger', $response->body());
+        $response = $api->sendDelete('currencies', $id);
+
+        if ($response['status'] == 409) {
+            return redirect()->route('currency.index')->with('danger', $response['body']);
         }
         return redirect()->route('currency.index')->with('danger', 'flushes.currency_deleted '.$id);
     }
