@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Api\MyApi;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PropertyRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 class PropertyController extends Controller
 {
@@ -14,17 +13,12 @@ class PropertyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($page = null)
+    public function index($page = null, MyApi $api)
     {
-        if (is_null($page)) {
-            $url = 'http://shopv5/api/properties';
-        } else {
-            $url = 'http://shopv5/api/properties?page='.$page;
-        }
-        
-        $resp = Http::acceptJson()->get($url);
-        $properties = json_decode($resp->body());
-        
+        $response = $api->getCollection('properties', $page);
+
+        $properties = $response['body'];
+
         return view('property.index', compact('properties'));
     }
 
@@ -44,16 +38,14 @@ class PropertyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PropertyRequest $request)
+    public function store(PropertyRequest $request, MyApi $api)
     {
-        $response = Http::post(
-            'http://shopv5/api/properties', 
-            $request->validated()
-        );
-        if ($response->status() == 201) {
-            return redirect()->route('property.index')->with('success', 'flushes.property_added '.json_decode($response->body())->name);
+        $response = $api->sendPost('properties', $request->validated());
+        
+        if ($response['status'] == 201) {
+            return redirect()->route('property.index')->with('success', 'flushes.property_added '.$response['body']->name);
         } else {
-            return redirect()->route('property.index')->with('danger', 'Error. Status '.$response->status());
+            return redirect()->route('property.index')->with('danger', 'Error. Status '.$response['status']);
         }
     }
 
@@ -63,10 +55,10 @@ class PropertyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(int $id)
+    public function show(int $id, MyApi $api)
     {
-        $response = Http::acceptJson()->get('http://shopv5/api/properties/'.$id);
-        $property = json_decode($response->body());
+        $response = $api->getItem('properties', $id);
+        $property = $response['body'];
         
         return view('property.show', compact('property'));
     }
@@ -77,10 +69,10 @@ class PropertyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(int $id)
+    public function edit(int $id, MyApi $api)
     {
-        $resp = Http::acceptJson()->get('http://shopv5/api/properties/'.$id);
-        $property = json_decode($resp->body());
+        $response = $api->getItem('properties', $id);
+        $property = $response['body'];
 
         return view('property.form', compact('property'));
     }
@@ -92,16 +84,14 @@ class PropertyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(PropertyRequest $request, int $id)
+    public function update(PropertyRequest $request, int $id, MyApi $api)
     {
-        $response = Http::put(
-            'http://shopv5/api/properties/'.$id, 
-            $request->validated()
-        );
-        if ($response->status() == 200) {
+        $response = $api->sendPut('properties', $id, $request->validated());
+        
+        if ($response['status'] == 200) {
             return redirect()->route('property.index')->with('success', 'flushes.property_updated '.$id);
         } else {
-            return redirect()->route('property.index')->with('danger', 'Error. Status '.$response->status());
+            return redirect()->route('property.index')->with('danger', 'Error. Status '.$response['status']);
         }
     }
 
@@ -111,11 +101,12 @@ class PropertyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(int $id)
+    public function destroy(int $id, MyApi $api)
     {
-        $response = Http::delete('http://shopv5/api/properties/'.$id);
-        if ($response->status() == 409) {
-            return redirect()->route('property.index')->with('danger', $response->body());
+        $response = $api->sendDelete('properties', $id);
+
+        if ($response['status'] == 409) {
+            return redirect()->route('property.index')->with('danger', $response['body']);
         }
         return redirect()->route('property.index')->with('danger', 'flushes.property_deleted '.$id);
     }

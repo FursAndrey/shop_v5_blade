@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Api\MyApi;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
-use Illuminate\Support\Facades\Http;
 
 class CategoryController extends Controller
 {
@@ -13,16 +13,11 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($page = null)
+    public function index($page = null, MyApi $api)
     {
-        if (is_null($page)) {
-            $url = 'http://shopv5/api/categories';
-        } else {
-            $url = 'http://shopv5/api/categories?page='.$page;
-        }
-        
-        $resp = Http::acceptJson()->get($url);
-        $categories = json_decode($resp->body());
+        $response = $api->getCollection('categories', $page);
+
+        $categories = $response['body'];
         
         return view('category.index', compact('categories'));
     }
@@ -43,16 +38,14 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CategoryRequest $request)
+    public function store(CategoryRequest $request, MyApi $api)
     {
-        $response = Http::post(
-            'http://shopv5/api/categories', 
-            $request->validated()
-        );
-        if ($response->status() == 201) {
-            return redirect()->route('category.index')->with('success', 'flushes.category_added '.json_decode($response->body())->name);
+        $response = $api->sendPost('categories', $request->validated());
+
+        if ($response['status'] == 201) {
+            return redirect()->route('category.index')->with('success', 'flushes.category_added '.$response['body']->name);
         } else {
-            return redirect()->route('category.index')->with('danger', 'Error. Status '.$response->status());
+            return redirect()->route('category.index')->with('danger', 'Error. Status '.$response['status']);
         }
     }
 
@@ -62,10 +55,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(int $id)
+    public function show(int $id, MyApi $api)
     {
-        $response = Http::acceptJson()->get('http://shopv5/api/categories/'.$id);
-        $category = json_decode($response->body());
+        $response = $api->getItem('categories', $id);
+        $category = $response['body'];
         
         return view('category.show', compact('category'));
     }
@@ -76,10 +69,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(int $id)
+    public function edit(int $id, MyApi $api)
     {
-        $resp = Http::acceptJson()->get('http://shopv5/api/categories/'.$id);
-        $category = json_decode($resp->body());
+        $response = $api->getItem('categories', $id);
+        $category = $response['body'];
 
         return view('category.form', compact('category'));
     }
@@ -91,16 +84,14 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CategoryRequest $request, int $id)
+    public function update(CategoryRequest $request, int $id, MyApi $api)
     {
-        $response = Http::put(
-            'http://shopv5/api/categories/'.$id, 
-            $request->validated()
-        );
-        if ($response->status() == 200) {
+        $response = $api->sendPut('categories', $id, $request->validated());
+        
+        if ($response['status'] == 200) {
             return redirect()->route('category.index')->with('success', 'flushes.category_updated '.$id);
         } else {
-            return redirect()->route('category.index')->with('danger', 'Error. Status '.$response->status());
+            return redirect()->route('category.index')->with('danger', 'Error. Status '.$response['status']);
         }
     }
 
@@ -110,11 +101,12 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(int $id)
+    public function destroy(int $id, MyApi $api)
     {
-        $response = Http::delete('http://shopv5/api/categories/'.$id);
-        if ($response->status() == 409) {
-            return redirect()->route('category.index')->with('danger', $response->body());
+        $response = $api->sendDelete('categories', $id);
+
+        if ($response['status'] == 409) {
+            return redirect()->route('category.index')->with('danger', $response['body']);
         }
         return redirect()->route('category.index')->with('danger', 'flushes.category_deleted '.$id);
     }
