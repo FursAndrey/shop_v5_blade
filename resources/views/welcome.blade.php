@@ -20,6 +20,7 @@
             <a href="{{ route('currency.index') }}">@lang('btn.currencies')</a>
             <a href="{{ route('property.index') }}">@lang('btn.properties')</a>
             <a href="{{ route('option.index') }}">@lang('btn.options')</a>
+            <a href="{{ route('product.index') }}">@lang('btn.products')</a>
         </div>
         @yield('content')
 		<!-- all js here -->
