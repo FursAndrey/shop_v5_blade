@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\PropertyController;
+use App\Http\Controllers\Admin\SkuController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,3 +33,5 @@ Route::resource('/option', OptionController::class);
 Route::get('/option/page/{page}', [OptionController::class, 'index'])->name('optionPage');
 Route::resource('/product', ProductController::class);
 Route::get('/product/page/{page}', [ProductController::class, 'index'])->name('productPage');
+Route::resource('/sku', SkuController::class);
+Route::get('/sku/page/{page}', [SkuController::class, 'index'])->name('skuPage');

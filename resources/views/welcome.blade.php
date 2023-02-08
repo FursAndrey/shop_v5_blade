@@ -21,6 +21,7 @@
             <a href="{{ route('property.index') }}">@lang('btn.properties')</a>
             <a href="{{ route('option.index') }}">@lang('btn.options')</a>
             <a href="{{ route('product.index') }}">@lang('btn.products')</a>
+            <a href="{{ route('sku.index') }}">@lang('btn.skus')</a>
         </div>
         @yield('content')
 		<!-- all js here -->
