@@ -42,5 +42,4 @@
             </td>
         </tr>
     </table>
-    <p>@dump($product)</p>
 @endsection
