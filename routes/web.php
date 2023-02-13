@@ -39,3 +39,4 @@ Route::get('/sku/page/{page}', [SkuController::class, 'index'])->name('skuPage')
 
 Route::get('/viewProducts', [PageController::class, 'viewProducts'])->name('viewProducts');
 Route::get('/viewSkus', [PageController::class, 'viewSkus'])->name('viewSkus');
+Route::get('/skuPage/{skuId}', [PageController::class, 'skuPage'])->name('skuPage');

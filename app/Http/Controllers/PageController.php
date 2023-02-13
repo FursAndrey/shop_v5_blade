@@ -18,7 +18,13 @@ class PageController extends Controller
     {
         $skus = $api->getCollection('skus', $page)['body'];
 
-        // dd($skus);
         return view('shop.viewSkus', compact('skus'));
+    }
+
+    public function skuPage(int $skuId, MyApi $api)
+    {
+        $sku = $api->getItem('skus', $skuId)['body'];
+        
+        return view('shop.skuPage', compact('sku'));
     }
 }
