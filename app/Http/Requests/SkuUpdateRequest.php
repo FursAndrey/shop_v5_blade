@@ -29,6 +29,8 @@ class SkuUpdateRequest extends FormRequest
             'product_id' => 'required|integer',
             'option_id' => 'required|array',
             'option_id.*' => 'required|integer',
+            'image' => 'nullable|array',
+            'image.*' => 'image|mimes:jpeg,png,jpg',
         ];
     }
 }

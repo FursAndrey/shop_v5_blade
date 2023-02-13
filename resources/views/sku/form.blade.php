@@ -5,7 +5,7 @@
 @section('content')
     @if (isset($sku))
         <h2>@lang('headers.update_sku') {{ $sku->id }}</h2>
-        <form action="{{ route('sku.update', $sku->id) }}" method="POST">
+        <form action="{{ route('sku.update', $sku->id) }}" method="POST" enctype="multipart/form-data">
             @method('PUT')
     @else
         <h2>@lang('headers.create_sku')</h2>
@@ -35,6 +35,13 @@
                 <div class="error alert-danger p-3">{{ $message }}</div>
             @enderror
             <input type="text" class="form-control" id="count" name="count" @isset($sku) value="{{ $sku->count }}" @endisset>
+        </div>
+        <div class="mb-3">
+            <strong>images:</strong>
+            @error('count')
+                <div class="error alert-danger p-3">{{ $message }}</div>
+            @enderror
+            <input multiple="multiple" name="image[]" type="file" class="form-control">
         </div>
         @isset($sku)
             @php

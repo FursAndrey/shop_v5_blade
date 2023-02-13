@@ -47,4 +47,8 @@
             </tr>
         @endforeach
     </table>
+    
+    {{-- @dump($sku)
+    @if(count($sku->images) > 0)
+    @endif --}}
 @endsection

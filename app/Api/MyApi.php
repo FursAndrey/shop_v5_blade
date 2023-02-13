@@ -35,12 +35,23 @@ class MyApi
         ];
     }
 
+    public function sendImagePost(string $apiName, string $image): array{
+        $response = Http::attach(
+            'image', file_get_contents($image)
+        )->post(env('MY_API_URL').$apiName);
+        
+        return [
+            'status' => $response->status(),
+            'body' => json_decode($response->body())
+        ];
+    }
+
     public function sendPut(string $apiName, int $elementId, array $queryParams): array
     {
         $response = Http::put(
-            env('MY_API_URL').$apiName.'/'.$elementId, 
-            $queryParams
-        );
+                env('MY_API_URL').$apiName.'/'.$elementId, 
+                $queryParams
+            );
         
         return [
             'status' => $response->status(),

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SkuCreateRequest;
 use App\Http\Requests\SkuUpdateRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class SkuController extends Controller
 {
@@ -98,6 +99,17 @@ class SkuController extends Controller
     {
         $response = $api->sendPut('skus', $id, $request->validated());
         
+        // foreach ($request->file('image') as $image) {
+        //     $file = $image->get();
+
+        //     $response = Http::withHeaders([
+        //         'Content-Type' => 'multipart/form-data',
+        //     ])->attach(
+        //         'image',
+        //         $file,
+        //     )->post('http://shopv5/api/images/3');
+        // }
+                
         if ($response['status'] == 200) {
             return redirect()->route('sku.index')->with('success', 'flushes.sku_updated '.$id);
         } else {
