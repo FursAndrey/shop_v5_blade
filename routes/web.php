@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\OptionController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\SkuController;
+use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,3 +36,5 @@ Route::resource('/product', ProductController::class);
 Route::get('/product/page/{page}', [ProductController::class, 'index'])->name('productPage');
 Route::resource('/sku', SkuController::class);
 Route::get('/sku/page/{page}', [SkuController::class, 'index'])->name('skuPage');
+
+Route::get('/viewProducts', [PageController::class, 'viewProducts'])->name('viewProducts');
