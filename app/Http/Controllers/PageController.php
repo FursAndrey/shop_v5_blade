@@ -27,4 +27,11 @@ class PageController extends Controller
         
         return view('shop.skuPage', compact('sku'));
     }
+
+    public function productPage(int $productId, MyApi $api)
+    {
+        $product = $api->getItem('products', $productId)['body'];
+        
+        return view('shop.productPage', compact('product'));
+    }
 }
