@@ -4,12 +4,7 @@
 
 @section('content')
     <h2>@lang('headers.sku') {{ $sku->id }}</h2>
-    <a class="btn btn-success mt-2 mb-2" href="{{ route('sku.index') }}">@lang('btn.return_to_skus')</a>
     <table class="table table-striped table-hover">
-        <tr>
-            <th>@lang('tables.name')</th>
-            <th>@lang('tables.value')</th>
-        </tr>
         <tr>
             <td>@lang('tables.id_sku')</td>
             <td>{{ $sku->id }}</td>
