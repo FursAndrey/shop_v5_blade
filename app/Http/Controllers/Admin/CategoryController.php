@@ -13,7 +13,7 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($page = null, MyApi $api)
+    public function index(MyApi $api, $page = null)
     {
         $response = $api->getCollection('categories', $page);
 

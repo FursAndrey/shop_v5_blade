@@ -14,7 +14,7 @@ class PageController extends Controller
         return view('shop.viewProducts', compact('products'));
     }
 
-    public function viewSkus(int $page = null, MyApi $api)
+    public function viewSkus(MyApi $api, int $page = null)
     {
         $skus = $api->getCollection('skus', $page)['body'];
 

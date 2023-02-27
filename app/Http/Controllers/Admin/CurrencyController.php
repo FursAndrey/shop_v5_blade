@@ -13,7 +13,7 @@ class CurrencyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($page = null, MyApi $api)
+    public function index(MyApi $api, $page = null)
     {
         $response = $api->getCollection('currencies', $page);
 
@@ -55,7 +55,7 @@ class CurrencyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(int $id, MyApi $api)
+    public function show(MyApi $api, int $id)
     {
         $response = $api->getItem('currencies', $id);
         $currency = $response['body'];
