@@ -14,7 +14,7 @@ class OptionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(int $page = null, MyApi $api)
+    public function index(MyApi $api, int $page = null)
     {
         $response = $api->getCollection('options', $page);
 
