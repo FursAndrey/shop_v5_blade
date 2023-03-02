@@ -43,7 +43,7 @@
             <label for="property_id" class="form-label">@lang('tables.property')</label>
             @php
                 $oldProperties = [];
-                if (null !== $product->properties) {
+                if (isset($product) && null !== $product->properties) {
                     if (is_array($product->properties)) {
                         foreach ($product->properties as $property) {
                             $oldProperties[] = $property->id;
@@ -54,7 +54,7 @@
             <select name="property_id[]" class="form-select" id="property_id" multiple size="5">
                 @foreach ($properties as $property)
                 <option value="{{ $property->id }}"
-                    @if(null !== $product->properties)
+                    @if(isset($product) && null !== $product->properties)
                         @if(is_array($product->properties))
                             @selected(in_array($property->id, $oldProperties))
                         @endif
